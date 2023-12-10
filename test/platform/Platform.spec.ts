@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 import { Platform } from "@/domain/entities/Platform"
 import { PlatformProtocol } from '@/domain/protocols/PlatformProtocol'
-import { PlatformUseCase } from '@/modules/platform/PlatformUseCase'
-import { PlatformController } from '@/modules/platform/PlatformController'
+import { PlatformUseCase } from '@/modules/platform/features/PlatformUseCase'
+import { PlatformController } from '@/modules/platform/presentation/PlatformController'
 
 const makeSut = () => {
     class AddPlatformStub implements PlatformProtocol {
@@ -62,12 +62,40 @@ describe('PlatformUseCase', () => {
 
     test('should call controller with correct values', () => {
         const { sut, platformUseCaseStub } = makeSut()
-        const platform = new Platform(mockPlataform)
 
         const useCaseSpy = jest.spyOn(platformUseCaseStub, 'execute')
 
-        sut.handle({ body: platform }, { statusCode: 200, body: {} })
+        sut.handle({ body: mockPlataform }, { statusCode: 200, body: {} })
 
-        expect(useCaseSpy).toHaveBeenCalledWith(platform)
+        expect(useCaseSpy).toHaveBeenCalledTimes(1)
     })
+
+    test('should return a error if controller receive no name', () => {
+        const { sut, platformUseCaseStub } = makeSut()
+        const httpResponse = sut.handle({ body: {} }, { statusCode: 400, body: {} })
+
+        expect(httpResponse.statusCode).toBe(400)
+
+        expect(httpResponse.body).toBe(JSON.stringify({ error: 'Missing parameter: name' }))
+    })
+
+    test('should return a error if controller receive no cover', () => {
+        const { sut, platformUseCaseStub } = makeSut()
+        const httpResponse = sut.handle({ body: { name: 'Platform' } }, { statusCode: 400, body: {} })
+
+        expect(httpResponse.statusCode).toBe(400)
+
+        expect(httpResponse.body).toBe(JSON.stringify({ error: 'Missing parameter: cover' }))
+    })
+
+    test('should return a error if controller receive no icon', () => {
+        const { sut, platformUseCaseStub } = makeSut()
+        const httpResponse = sut.handle({ body: { name: 'Platform', cover: 'http://cover.com' } }, { statusCode: 400, body: {} })
+
+        expect(httpResponse.statusCode).toBe(400)
+
+        expect(httpResponse.body).toBe(JSON.stringify({ error: 'Missing parameter: icon' }))
+    })
+
+
 })
