@@ -96,6 +96,4 @@ describe('PlatformUseCase', () => {
 
         expect(httpResponse.body).toBe(JSON.stringify({ error: 'Missing parameter: icon' }))
     })
-
-
 })

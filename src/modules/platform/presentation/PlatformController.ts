@@ -26,11 +26,7 @@ export class PlatformController extends Controller {
             const platform = new Platform(req.body)
             this.platformUseCase.execute(platform)
 
-
-            res.statusCode = 201
-            res.body = JSON.stringify(platform)
-
-            return res
+            return this.jsonResponse(201, platform)
         } catch (error) {
             return this.sendError(error)
         }
