@@ -8,7 +8,7 @@ export class PrismaPlatformRepository implements PlatformProtocol {
     async add(platform: Platform): Promise<void> {
         try {
             await this.prismaClient.platform.create({
-                data: platform
+                data: platform.toJSON() as Prisma.PlatformCreateInput
             })
         } catch (error) {
             throw new Error(error)

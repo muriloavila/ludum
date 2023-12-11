@@ -51,4 +51,13 @@ export class Platform {
     set uuid(uuid: string) {
         this._uuid = uuid
     }
+
+    toJSON(): object {
+        return {
+            uuid: this._uuid,
+            name: this._name,
+            cover: this._cover,
+            icon: this._icon
+        }
+    }
 }
