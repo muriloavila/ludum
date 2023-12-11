@@ -1,45 +1,47 @@
 import crypto from 'crypto'
-import { Platform } from "@/domain/entities/Platform"
+import { Platform } from '@/domain/entities/Platform'
 import { PlatformProtocol } from '@/domain/protocols/PlatformProtocol'
-import { PlatformUseCase } from '@/modules/platform/features/PlatformUseCase'
+import { CreatePlatformUseCase } from '@/modules/platform/features/create/CreatePlatformUseCase'
 import { PlatformController } from '@/modules/platform/presentation/PlatformController'
 import { HttpResponse } from '@/domain/protocols/HttpProtocol'
+import { ShowPlatformUseCase } from '@/modules/platform/features/show/ShowPlatformUseCase'
 
-const makeSut = () => {
-    class AddPlatformStub implements PlatformProtocol {
-        add(plataform: Platform): Promise<void> { return Promise.resolve() }
+const makeSut = (): any => {
+    class PlatformProtocolStub implements PlatformProtocol {
+        async add(platform: Platform): Promise<void> { await Promise.resolve() }
+        async findByUuid(uuid: string): Promise<Platform> { return await Promise.resolve(new Platform(mockPlatform)) }
     }
 
     class HttpResponseStub implements HttpResponse {
-        statusCode: number;
-        body: any;
+        statusCode: number
+        body: any
 
         constructor() {
-            this.statusCode = 200;
-            this.body = {};
+            this.statusCode = 200
+            this.body = {}
         }
 
         json(body: any): HttpResponse {
-            this.body = body;
-            return this;
+            this.body = body
+            return this
         }
 
         status(statusCode: number): HttpResponse {
-            this.statusCode = statusCode;
-            return this;
+            this.statusCode = statusCode
+            return this
         }
     }
 
-
-    const addPlatformStub = new AddPlatformStub()
-    const platformUseCaseStub = new PlatformUseCase(addPlatformStub)
-    const sut = new PlatformController(platformUseCaseStub)
+    const platformProtocolStub = new PlatformProtocolStub()
+    const createPlatformUseCaseStub = new CreatePlatformUseCase(platformProtocolStub)
+    const showPlatformUseCaseStub = new ShowPlatformUseCase(platformProtocolStub)
+    const sut = new PlatformController(createPlatformUseCaseStub)
     const httpResponseStub = new HttpResponseStub()
 
-    return { addPlatformStub, platformUseCaseStub, sut, httpResponseStub }
+    return { platformProtocolStub, createPlatformUseCaseStub, sut, httpResponseStub, showPlatformUseCaseStub }
 }
 
-const mockPlataform = {
+const mockPlatform = {
     uuid: crypto.randomUUID(),
     name: 'Platform',
     cover: 'http://cover.com',
@@ -47,48 +49,48 @@ const mockPlataform = {
 }
 
 describe('PlatformUseCase', () => {
-    test('should create a plataform', () => {
-        const platform = new Platform(mockPlataform)
+    test('should create a platform', () => {
+        const platform = new Platform(mockPlatform)
 
         expect(platform.name).toBe('Platform')
     })
 
     test('should create a platform with uuid', () => {
-        const platform = new Platform(mockPlataform)
+        const platform = new Platform(mockPlatform)
 
         expect(platform.uuid).toBeDefined()
     })
 
-    test('should call add function with correct values', () => {
-        const { addPlatformStub } = makeSut()
-        const platform = new Platform(mockPlataform)
+    test('should call add function with correct values', async () => {
+        const { platformProtocolStub } = makeSut()
+        const platform = new Platform(mockPlatform)
 
-        const addSpy = jest.spyOn(addPlatformStub, 'add').mockImplementationOnce(async () => { })
+        const addSpy = jest.spyOn(platformProtocolStub, 'add').mockImplementationOnce(async () => { })
 
-        addPlatformStub.add(platform)
+        await platformProtocolStub.add(platform)
 
         expect(addSpy).toHaveBeenCalledWith(platform)
     })
 
-    test('should call useCase with correct values', () => {
-        const { addPlatformStub, platformUseCaseStub } = makeSut()
-        const platform = new Platform(mockPlataform)
+    test('should call useCase with correct values', async () => {
+        const { platformProtocolStub, createPlatformUseCaseStub } = makeSut()
+        const platform = new Platform(mockPlatform)
 
-        const addSpy = jest.spyOn(addPlatformStub, 'add')
-        const useCaseSpy = jest.spyOn(platformUseCaseStub, 'execute')
+        const addSpy = jest.spyOn(platformProtocolStub, 'add')
+        const useCaseSpy = jest.spyOn(createPlatformUseCaseStub, 'execute')
 
-        platformUseCaseStub.execute(platform)
+        await createPlatformUseCaseStub.execute(platform)
 
         expect(addSpy).toHaveBeenCalledWith(platform)
         expect(useCaseSpy).toHaveBeenCalledWith(platform)
     })
 
     test('should call controller with correct values', () => {
-        const { sut, platformUseCaseStub, httpResponseStub } = makeSut()
+        const { sut, createPlatformUseCaseStub, httpResponseStub } = makeSut()
 
-        const useCaseSpy = jest.spyOn(platformUseCaseStub, 'execute')
+        const useCaseSpy = jest.spyOn(createPlatformUseCaseStub, 'execute')
 
-        sut.handle({ body: mockPlataform }, httpResponseStub)
+        sut.handle({ body: mockPlatform }, httpResponseStub)
 
         expect(useCaseSpy).toHaveBeenCalledTimes(1)
     })
@@ -118,5 +120,32 @@ describe('PlatformUseCase', () => {
         expect(httpResponse.statusCode).toBe(400)
 
         expect(httpResponse.body).toEqual({ error: 'Missing parameter: icon' })
+    })
+
+    test('should return a error if platform not exists', async () => {
+        const { platformProtocolStub, showPlatformUseCaseStub } = makeSut()
+
+        const findSpy = jest.spyOn(platformProtocolStub, 'findByUuid').mockImplementationOnce(async () => { })
+        const useCaseSpy = jest.spyOn(showPlatformUseCaseStub, 'execute')
+
+        showPlatformUseCaseStub.execute({ uuid: crypto.randomUUID() }).catch((error) => {
+            expect(error).toEqual(new Error('Platform not found'))
+        })
+
+        expect(findSpy).toHaveBeenCalledTimes(1)
+        expect(useCaseSpy).toHaveBeenCalledTimes(1)
+    })
+
+    test('should return true if platform exists', async () => {
+        const { platformProtocolStub, showPlatformUseCaseStub } = makeSut()
+
+        const findSpy = jest.spyOn(platformProtocolStub, 'findByUuid')
+        const useCaseSpy = jest.spyOn(showPlatformUseCaseStub, 'execute')
+
+        const platform = showPlatformUseCaseStub.execute({ uuid: mockPlatform.uuid })
+
+        expect(findSpy).toHaveBeenCalledTimes(1)
+        expect(useCaseSpy).toHaveBeenCalledTimes(1)
+        await expect(platform).resolves.toEqual(new Platform(mockPlatform))
     })
 })

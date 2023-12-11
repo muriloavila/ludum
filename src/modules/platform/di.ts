@@ -1,8 +1,8 @@
-import { PrismaPlatformRepository } from "@/data/repositories/prisma/PrismaPlatformRepository";
-import { Container } from "typedi";
-import { PlatformController } from "./presentation/PlatformController";
-import { PlatformUseCase } from "./features/PlatformUseCase";
+import { Container } from 'typedi'
+import { PrismaPlatformRepository } from '@/data/repositories/prisma/PrismaPlatformRepository'
+import { PlatformController } from './presentation/PlatformController'
+import { CreatePlatformUseCase } from './features/create/CreatePlatformUseCase'
 
 Container.set('PlatformRepository', new PrismaPlatformRepository())
-Container.set('PlatformUseCase', new PlatformUseCase(new PrismaPlatformRepository()))
-Container.set('PlatformController', new PlatformController(Container.get('PlatformUseCase')))
+Container.set('CreatePlatformUseCase', new CreatePlatformUseCase(new PrismaPlatformRepository()))
+Container.set('PlatformController', new PlatformController(Container.get('CreatePlatformUseCase')))

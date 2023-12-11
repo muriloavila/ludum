@@ -1,11 +1,11 @@
 import { Platform } from "@/domain/entities/Platform"
-import { PlatformUseCase } from "@/modules/platform/features/PlatformUseCase"
+import { CreatePlatformUseCase } from "@/modules/platform/features/create/CreatePlatformUseCase"
 import { HttpRequest, HttpResponse } from "@/domain/protocols/HttpProtocol"
 import { PlatformMissingParameterError } from "../errors/PlatformMissingParameterError"
 import { Controller } from "@/domain/bases/Controller"
 
 export class PlatformController extends Controller {
-    constructor(private readonly platformUseCase: PlatformUseCase) {
+    constructor(private readonly createPlatformUseCase: CreatePlatformUseCase) {
         super()
     }
 
@@ -24,7 +24,7 @@ export class PlatformController extends Controller {
             }
 
             const platform = new Platform(req.body)
-            this.platformUseCase.execute(platform)
+            this.createPlatformUseCase.execute(platform)
 
             return this.jsonResponse(201, platform, res)
         } catch (error) {

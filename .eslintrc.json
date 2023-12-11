@@ -6,5 +6,7 @@
     "rules": {
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/consistent-type-imports": "off",
+        "@typescript-eslint/indent": "off",
+        "@typescript-eslint/space-before-function-paren": "off"
     }
 }
