@@ -1,6 +1,6 @@
 import { Platform } from "@/domain/entities/Platform"
 import { PlatformUseCase } from "@/modules/platform/features/PlatformUseCase"
-import { HttpRequest, HttpResponse } from "@/domain/protocols/httpProtocol"
+import { HttpRequest, HttpResponse } from "@/domain/protocols/HttpProtocol"
 import { PlatformMissingParameterError } from "../errors/PlatformMissingParameterError"
 import { Controller } from "@/domain/bases/Controller"
 
@@ -26,9 +26,9 @@ export class PlatformController extends Controller {
             const platform = new Platform(req.body)
             this.platformUseCase.execute(platform)
 
-            return this.jsonResponse(201, platform)
+            return this.jsonResponse(201, platform, res)
         } catch (error) {
-            return this.sendError(error)
+            return this.sendError(error, res)
         }
     }
 }
