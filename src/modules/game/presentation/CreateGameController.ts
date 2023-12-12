@@ -1,11 +1,11 @@
 import { Controller } from '@/domain/bases/Controller'
-import { GameUseCase } from '../features/GameUseCase'
 import { HttpRequest, HttpResponse } from '@/domain/protocols/HttpProtocol'
 import { Game } from '@/domain/entities/Game'
-import { GameMissingParameterError } from '../errors/GameMissingParameterError'
+import { GameMissingParameterError } from '@/modules/game/errors/GameMissingParameterError'
+import { CreateGameUseCase } from '@/modules/game/features/CreateGameUseCase'
 
-export class GameController extends Controller {
-    constructor(private readonly gameUseCase: GameUseCase) {
+export class CreateGameController extends Controller {
+    constructor(private readonly gameUseCase: CreateGameUseCase) {
         super()
     }
 
@@ -20,6 +20,8 @@ export class GameController extends Controller {
 
             return this.jsonResponse(201, game, res)
         } catch (error: any) {
+            console.log(error)
+            if (!error.statusCode) error.statusCode = 500
             return this.sendError(error, res)
         }
     }

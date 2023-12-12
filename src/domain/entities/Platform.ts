@@ -24,20 +24,20 @@ export class Platform {
         return this._name
     }
 
-    get cover(): string {
-        return this._cover
-    }
-
-    get icon(): string {
-        return this._icon
-    }
-
     set name(name: string) {
         this._name = name
     }
 
+    get cover(): string {
+        return this._cover
+    }
+
     set cover(cover: string) {
         this._cover = cover
+    }
+
+    get icon(): string {
+        return this._icon
     }
 
     set icon(icon: string) {

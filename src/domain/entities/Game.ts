@@ -28,28 +28,28 @@ export class Game {
         return this._name
     }
 
-    get description(): string {
-        return this._description
-    }
-
-    get cover(): string {
-        return this._cover
-    }
-
-    get platform(): Platform {
-        return this._platform
-    }
-
     set name(name: string) {
         this._name = name
+    }
+
+    get description(): string {
+        return this._description
     }
 
     set description(description: string) {
         this._description = description
     }
 
+    get cover(): string {
+        return this._cover
+    }
+
     set cover(cover: string) {
         this._cover = cover
+    }
+
+    get platform(): Platform {
+        return this._platform
     }
 
     set platform(platform: Platform) {
@@ -70,7 +70,7 @@ export class Game {
             name: this._name,
             description: this._description,
             cover: this._cover,
-            platform: this._platform.toJSON()
+            platform: this._platform
         }
     }
 

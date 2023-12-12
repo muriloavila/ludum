@@ -2,8 +2,8 @@ import crypto from 'crypto'
 import { Game } from '@/domain/entities/Game'
 import { Platform } from '@/domain/entities/Platform'
 import { GameProtocol } from '@/domain/protocols/GameProtocol'
-import { GameUseCase } from '@/modules/game/features/GameUseCase'
-import { GameController } from '@/modules/game/presentation/GameController'
+import { CreateGameUseCase } from '@/modules/game/features/CreateGameUseCase'
+import { CreateGameController } from '@/modules/game/presentation/CreateGameController'
 import { HttpResponse } from '@/domain/protocols/HttpProtocol'
 import { PlatformProtocol } from '@/domain/protocols/PlatformProtocol'
 
@@ -54,9 +54,9 @@ const makeSut = (): any => {
 
     const addGameStub = new AddGameStub()
     const platformProtocol = new PlatformProtocolStub()
-    const gameUseCaseStub = new GameUseCase(addGameStub, platformProtocol)
+    const gameUseCaseStub = new CreateGameUseCase(addGameStub, platformProtocol)
     const httpResponseStub = new HttpResponseStub()
-    const sut = new GameController(gameUseCaseStub)
+    const sut = new CreateGameController(gameUseCaseStub)
 
     return { addGameStub, gameUseCaseStub, httpResponseStub, sut, platformProtocol }
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import Container from 'typedi'
-import { CreatePlatformController } from './presentation/create/CreatePlatformController'
+import { CreatePlatformController } from './presentation/CreatePlatformController'
 
 const platformRouter = (): Router => {
     const router = Router()

@@ -1,5 +1,5 @@
 import { Platform } from '@/domain/entities/Platform'
-import { CreatePlatformUseCase } from '@/modules/platform/features/create/CreatePlatformUseCase'
+import { CreatePlatformUseCase } from '@/modules/platform/features/CreatePlatformUseCase'
 import { HttpRequest, HttpResponse } from '@/domain/protocols/HttpProtocol'
 import { PlatformMissingParameterError } from '@/modules/platform/errors/PlatformMissingParameterError'
 import { Controller } from '@/domain/bases/Controller'

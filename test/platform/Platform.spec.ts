@@ -1,10 +1,10 @@
 import crypto from 'crypto'
 import { Platform } from '@/domain/entities/Platform'
 import { PlatformProtocol } from '@/domain/protocols/PlatformProtocol'
-import { CreatePlatformUseCase } from '@/modules/platform/features/create/CreatePlatformUseCase'
-import { CreatePlatformController } from '@/modules/platform/presentation/create/CreatePlatformController'
+import { CreatePlatformUseCase } from '@/modules/platform/features/CreatePlatformUseCase'
+import { CreatePlatformController } from '@/modules/platform/presentation/CreatePlatformController'
 import { HttpResponse } from '@/domain/protocols/HttpProtocol'
-import { ShowPlatformUseCase } from '@/modules/platform/features/show/ShowPlatformUseCase'
+import { ShowPlatformUseCase } from '@/modules/platform/features/ShowPlatformUseCase'
 
 const makeSut = (): any => {
     class PlatformProtocolStub implements PlatformProtocol {
