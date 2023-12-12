@@ -1,12 +1,12 @@
-import { Router } from "express";
-import Container from "typedi";
-import { PlatformController } from "./presentation/PlatformController";
+import { Router } from 'express'
+import Container from 'typedi'
+import { CreatePlatformController } from './presentation/create/CreatePlatformController'
 
-const platformRouter = () => {
-    const router = Router();
-    const platformController: PlatformController = Container.get('PlatformController')
+const platformRouter = (): Router => {
+    const router = Router()
+    const createPlatformController: CreatePlatformController = Container.get('CreatePlatformController')
 
-    router.post('/platform', platformController.handle.bind(platformController))
+    router.post('/platform', createPlatformController.handle.bind(createPlatformController))
     return router
 }
 

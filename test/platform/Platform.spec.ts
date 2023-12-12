@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import { Platform } from '@/domain/entities/Platform'
 import { PlatformProtocol } from '@/domain/protocols/PlatformProtocol'
 import { CreatePlatformUseCase } from '@/modules/platform/features/create/CreatePlatformUseCase'
-import { PlatformController } from '@/modules/platform/presentation/PlatformController'
+import { CreatePlatformController } from '@/modules/platform/presentation/create/CreatePlatformController'
 import { HttpResponse } from '@/domain/protocols/HttpProtocol'
 import { ShowPlatformUseCase } from '@/modules/platform/features/show/ShowPlatformUseCase'
 
@@ -35,7 +35,7 @@ const makeSut = (): any => {
     const platformProtocolStub = new PlatformProtocolStub()
     const createPlatformUseCaseStub = new CreatePlatformUseCase(platformProtocolStub)
     const showPlatformUseCaseStub = new ShowPlatformUseCase(platformProtocolStub)
-    const sut = new PlatformController(createPlatformUseCaseStub)
+    const sut = new CreatePlatformController(createPlatformUseCaseStub)
     const httpResponseStub = new HttpResponseStub()
 
     return { platformProtocolStub, createPlatformUseCaseStub, sut, httpResponseStub, showPlatformUseCaseStub }

@@ -1,10 +1,10 @@
 import { Platform } from '@/domain/entities/Platform'
 import { CreatePlatformUseCase } from '@/modules/platform/features/create/CreatePlatformUseCase'
 import { HttpRequest, HttpResponse } from '@/domain/protocols/HttpProtocol'
-import { PlatformMissingParameterError } from '../errors/PlatformMissingParameterError'
+import { PlatformMissingParameterError } from '@/modules/platform/errors/PlatformMissingParameterError'
 import { Controller } from '@/domain/bases/Controller'
 
-export class PlatformController extends Controller {
+export class CreatePlatformController extends Controller {
     constructor(private readonly createPlatformUseCase: CreatePlatformUseCase) {
         super()
     }
