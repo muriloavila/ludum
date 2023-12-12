@@ -53,11 +53,12 @@ const makeSut = (): any => {
     }
 
     const addGameStub = new AddGameStub()
-    const gameUseCaseStub = new GameUseCase(addGameStub, new PlatformProtocolStub())
+    const platformProtocol = new PlatformProtocolStub()
+    const gameUseCaseStub = new GameUseCase(addGameStub, platformProtocol)
     const httpResponseStub = new HttpResponseStub()
     const sut = new GameController(gameUseCaseStub)
 
-    return { addGameStub, gameUseCaseStub, httpResponseStub, sut }
+    return { addGameStub, gameUseCaseStub, httpResponseStub, sut, platformProtocol }
 }
 
 describe('GameUseCase', () => {
@@ -118,13 +119,13 @@ describe('GameUseCase', () => {
         expect(() => { gameUseCaseStub.execute(game) }).toThrow()
     })
 
-    test('should call controller with correct values', () => {
+    test('should call controller with correct values', async () => {
         const { sut, gameUseCaseStub, httpResponseStub } = makeSut()
         const game = new Game(mockGame)
 
         const executeSpy = jest.spyOn(gameUseCaseStub, 'execute')
 
-        const response = sut.handle({ body: mockGame }, httpResponseStub)
+        const response = await sut.handle({ body: mockGame }, httpResponseStub)
 
         expect(executeSpy).toHaveBeenCalledWith(game)
 
@@ -132,30 +133,32 @@ describe('GameUseCase', () => {
         expect(response.body).toEqual(game)
     })
 
-    test('should return a error if controller receive no name', () => {
+    test('should return a error if controller receive no name', async () => {
         const { sut, httpResponseStub } = makeSut()
-        const httpResponse = sut.handle({ body: { platform: mockPlatform } }, httpResponseStub)
+        const httpResponse = await sut.handle({ body: { platform: mockPlatform } }, httpResponseStub)
 
         expect(httpResponse.statusCode).toBe(400)
 
         expect(httpResponse.body).toEqual({ error: 'Missing parameter: name' })
     })
 
-    test('should return a error if controller receive no platform', () => {
+    test('should return a error if controller receive no platform', async () => {
         const { sut, httpResponseStub } = makeSut()
-        const httpResponse = sut.handle({ body: { name: 'Game', platform: mockPlatform } }, httpResponseStub)
+        const httpResponse = await sut.handle({ body: { name: 'Game' } }, httpResponseStub)
 
         expect(httpResponse.statusCode).toBe(400)
 
         expect(httpResponse.body).toEqual({ error: 'Missing parameter: platform' })
     })
 
-    test('should return a error if platform not exists', () => {
-        const { sut, httpResponseStub } = makeSut()
-        const httpResponse = sut.handle({ body: { name: 'Game', platform: {} } }, httpResponseStub)
+    test('should return a error if platform not exists', async () => {
+        const { sut, httpResponseStub, platformProtocol } = makeSut()
+        jest.spyOn(platformProtocol, 'findByUuid').mockImplementationOnce(async () => { return await Promise.resolve(null) })
+
+        const httpResponse = await sut.handle({ body: { name: 'Game', platform: {} } }, httpResponseStub)
 
         expect(httpResponse.statusCode).toBe(400)
 
-        expect(httpResponse.body).toEqual({ error: 'Platform not exists' })
+        expect(httpResponse.body).toEqual({ error: 'Platform not found' })
     })
 })

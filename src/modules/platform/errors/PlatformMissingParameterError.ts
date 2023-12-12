@@ -1,7 +1,7 @@
-import { BaseError } from "@/domain/bases/Error"
+import { BaseError } from '@/domain/bases/Error'
 
 export class PlatformMissingParameterError extends BaseError {
-    constructor(paramName) {
+    constructor(paramName: string) {
         super(400, `Missing parameter: ${paramName}`)
         this.name = 'PlatformMissingParameterError'
     }
