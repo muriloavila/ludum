@@ -7,6 +7,7 @@ export interface GameProps {
     description: string
     cover: string
     platform: Platform
+    platformUuid: string
 }
 
 export class Game {
@@ -14,6 +15,7 @@ export class Game {
     private _name: string
     private _description: string
     private _cover: string
+    private _platformUuid: string
     private _platform: Platform
 
     constructor(props: GameProps) {
@@ -22,6 +24,7 @@ export class Game {
         this._description = props.description
         this._cover = props.cover
         this._platform = props.platform
+        this._platformUuid = props.platformUuid
     }
 
     get name(): string {
@@ -62,6 +65,14 @@ export class Game {
 
     set uuid(uuid: string) {
         this._uuid = uuid
+    }
+
+    get platformUuid(): string {
+        return this._platformUuid
+    }
+
+    set platformUuid(platformUuid: string) {
+        this._platformUuid = platformUuid
     }
 
     toJSON(): object {

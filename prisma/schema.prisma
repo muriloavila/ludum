@@ -3,13 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider     = "sqlite"
-  url          = "file:./ludum.db"
-  relationMode = "foreignKeys"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 model Platform {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   uuid      String    @unique
   name      String
   cover     String
@@ -22,7 +21,7 @@ model Platform {
 }
 
 model Game {
-  id           Int       @id @default(autoincrement())
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   uuid         String    @unique
   name         String
   description  String?

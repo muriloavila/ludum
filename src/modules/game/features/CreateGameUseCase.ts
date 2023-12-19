@@ -7,7 +7,7 @@ export class CreateGameUseCase {
     constructor(private readonly gameProtocol: GameProtocol, private readonly platformProtocol: PlatformProtocol) { }
 
     async execute(game: Game): Promise<void> {
-        const platform = await this.platformProtocol.findByUuid(game.platform.uuid)
+        const platform = await this.platformProtocol.findByUuid(game.platformUuid)
         if (!platform) throw new PlatformNotFoundError()
 
         game.platform = platform

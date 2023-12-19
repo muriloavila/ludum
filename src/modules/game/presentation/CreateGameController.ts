@@ -13,9 +13,9 @@ export class CreateGameController extends Controller {
         try {
             if (!req.body.name) throw new GameMissingParameterError('name')
 
-            if (!req.body.platform) throw new GameMissingParameterError('platform')
+            if (!req.body.platformUuid) throw new GameMissingParameterError('platformUuid')
 
-            const game = new Game(req.body)
+            const game = new Game({ ...req.body, platformUuid: req.body.platformUuid })
             await this.gameUseCase.execute(game)
 
             return this.jsonResponse(201, game, res)

@@ -15,7 +15,8 @@ export const mockGame = {
     name: 'Game',
     description: 'Description',
     cover: 'http://cover.com',
-    platform: mockPlatform
+    platform: mockPlatform,
+    platformUuid: mockPlatform.uuid
 }
 
 export const makeSut = (): any => {

@@ -89,14 +89,14 @@ describe('GameUseCase', () => {
 
         expect(httpResponse.statusCode).toBe(400)
 
-        expect(httpResponse.body).toEqual({ error: 'Missing parameter: platform' })
+        expect(httpResponse.body).toEqual({ error: 'Missing parameter: platformUuid' })
     })
 
     test('should return a error if platform not exists', async () => {
         const { sut, httpResponseStub, platformProtocol } = makeSut()
         jest.spyOn(platformProtocol, 'findByUuid').mockImplementationOnce(async () => { return await Promise.resolve(null) })
 
-        const httpResponse = await sut.handle({ body: { name: 'Game', platform: {} } }, httpResponseStub)
+        const httpResponse = await sut.handle({ body: { name: 'Game', platformUuid: '12345' } }, httpResponseStub)
 
         expect(httpResponse.statusCode).toBe(400)
 

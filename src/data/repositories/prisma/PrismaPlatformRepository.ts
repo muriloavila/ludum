@@ -17,10 +17,11 @@ export class PrismaPlatformRepository implements PlatformProtocol {
 
     async findByUuid(uuid: string): Promise<Platform | null> {
         try {
-            const platform = await this.prismaClient.platform.findFirst({
-                where: { uuid }
+            const platform = await this.prismaClient.platform.findUnique({
+                where: {
+                    uuid
+                }
             })
-
             if (!platform) return null
 
             return new Platform(platform)
