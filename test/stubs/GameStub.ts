@@ -7,6 +7,7 @@ import { PlatformProtocol } from '@/domain/protocols/PlatformProtocol'
 import { CreateGameUseCase } from '@/modules/game/features/CreateGameUseCase'
 import { HttpResponseStub } from './Stubs'
 import { CreateGameController } from '@/modules/game/presentation/CreateGameController'
+import { ShowGameUseCase } from '@/modules/game/features/ShowGameUseCase'
 
 export const mockPlatform = new Platform(platform)
 
@@ -22,6 +23,7 @@ export const mockGame = {
 export const makeSut = (): any => {
     class AddGameStub implements GameProtocol {
         async add(game: Game): Promise<void> { await Promise.resolve() }
+        async findByUuid(uuid: string): Promise<Game> { return await Promise.resolve(new Game(mockGame)) }
     }
 
     class PlatformProtocolStub implements PlatformProtocol {
@@ -32,8 +34,9 @@ export const makeSut = (): any => {
     const addGameStub = new AddGameStub()
     const platformProtocol = new PlatformProtocolStub()
     const gameUseCaseStub = new CreateGameUseCase(addGameStub, platformProtocol)
+    const showGameUseCaseStub = new ShowGameUseCase(addGameStub)
     const httpResponseStub = new HttpResponseStub()
     const sut = new CreateGameController(gameUseCaseStub)
 
-    return { addGameStub, gameUseCaseStub, httpResponseStub, sut, platformProtocol }
+    return { addGameStub, gameUseCaseStub, httpResponseStub, sut, platformProtocol, showGameUseCaseStub }
 }
